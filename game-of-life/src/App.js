@@ -1,39 +1,54 @@
+import './App.css'
 import React from 'react';
-import {Layer, Rect, Stage, Group} from 'react-konva';
-import Konva from 'konva';
+import {Layer, Stage} from 'react-konva';
 
-class MyRect extends React.Component {
-	constructor(...args) {
-		super(...args);
-		this.state = {
-			color: 'green'
-		};
-		this.handleClick = this.handleClick.bind(this);
-	}
-	handleClick() {
-		this.setState({
-			color: Konva.Util.getRandomColor()
-		});
-	}
-	render() {
-		return (
-            <Rect
-                x={10} y={10} width={50} height={50}
-                fill={this.state.color}
-                shadowBlur={10}
-                onClick={this.handleClick}
-            />
-		);
-	}
-}
+import Rectangle from './Rectangle'
+import {getGunConfiguration, computeNextIteration} from './utils'
+
+export const SIZE = 40
+const RECTANGLE_SIZE = 10
 
 export default class App extends React.Component {
 
+    state = {
+        grid: getGunConfiguration()
+    }
+
+    componentDidMount() {
+        setInterval(() => {
+            this.setState({
+              	grid: computeNextIteration(this.state.grid)
+            })
+        }, 10)
+    }
+
+    renderGrid () {
+        const {grid} = this.state
+        const result = []
+
+        grid.forEach((row, rowIndex) => {
+            row.forEach((column, columnIndex) => {
+                result.push(
+                    <Rectangle
+                        key={`${rowIndex}-${columnIndex}`}
+                        isOn={column}
+                        x={columnIndex * RECTANGLE_SIZE}
+                        y={rowIndex * RECTANGLE_SIZE}
+                        width={RECTANGLE_SIZE}
+                        height={RECTANGLE_SIZE}
+                    />
+                )
+            })
+        })
+
+        return result
+    }
+
     render () {
 		return (
-            <Stage width={700} height={700}>
+            <Stage width={SIZE * 10} height={SIZE * 10}>
                 <Layer>
-                    <MyRect/>
+                    {this.renderGrid()}
                 </Layer>
             </Stage>
 		);
