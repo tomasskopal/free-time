@@ -19,7 +19,13 @@ export default class App extends React.Component {
             this.setState({
               	grid: computeNextIteration(this.state.grid)
             })
-        }, 10)
+        }, 100)
+    }
+
+    onCellClick = () => {
+		this.setState({
+			grid: computeNextIteration(this.state.grid)
+		})
     }
 
     renderGrid () {
@@ -36,6 +42,7 @@ export default class App extends React.Component {
                         y={rowIndex * RECTANGLE_SIZE}
                         width={RECTANGLE_SIZE}
                         height={RECTANGLE_SIZE}
+                        onClick={this.onCellClick}
                     />
                 )
             })
