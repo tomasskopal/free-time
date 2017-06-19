@@ -1,11 +1,9 @@
 import './App.css'
 import React from 'react';
-import {Layer, Stage} from 'react-konva';
 
 import Rectangle from './Rectangle'
 import {getGunConfiguration, computeNextIteration} from './utils'
 
-export const SIZE = 40
 const RECTANGLE_SIZE = 10
 
 export default class App extends React.Component {
@@ -19,12 +17,16 @@ export default class App extends React.Component {
             this.setState({
               	grid: computeNextIteration(this.state.grid)
             })
-        }, 100)
+        }, 150)
     }
 
-    onCellClick = () => {
+    onCellClick = (rowIndex, columnIndex) => {
+    	const grid = this.state.grid
+    	const actualValue = grid[rowIndex][columnIndex]
+		grid[rowIndex][columnIndex] = actualValue ? 0 : 1
+
 		this.setState({
-			grid: computeNextIteration(this.state.grid)
+			grid: computeNextIteration(grid)
 		})
     }
 
@@ -43,6 +45,8 @@ export default class App extends React.Component {
                         width={RECTANGLE_SIZE}
                         height={RECTANGLE_SIZE}
                         onClick={this.onCellClick}
+						rowIndex={rowIndex}
+						columnIndex={columnIndex}
                     />
                 )
             })
@@ -53,11 +57,9 @@ export default class App extends React.Component {
 
     render () {
 		return (
-            <Stage width={SIZE * 10} height={SIZE * 10}>
-                <Layer>
-                    {this.renderGrid()}
-                </Layer>
-            </Stage>
+            <div style={{border: '1px solid', position: 'relative', width: '400px', height: '400px'}}>
+                {this.renderGrid()}
+            </div>
 		);
 	}
 }

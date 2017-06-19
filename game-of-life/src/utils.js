@@ -1,5 +1,4 @@
 
-import {SIZE} from './App'
 import {gunGrid_40} from './configuration'
 
 export function getGunConfiguration () {
@@ -56,6 +55,7 @@ export function computeNextIteration (grid) {
 		})
 		result.push(newRow)
 	})
+
 
 	return result
 }
