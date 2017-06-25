@@ -9,15 +9,8 @@ const RECTANGLE_SIZE = 10
 export default class App extends React.Component {
 
     state = {
-        grid: getGunConfiguration()
-    }
-
-    componentDidMount() {
-        setInterval(() => {
-            this.setState({
-              	grid: computeNextIteration(this.state.grid)
-            })
-        }, 150)
+        grid: getGunConfiguration(),
+		timer: null
     }
 
     onCellClick = (rowIndex, columnIndex) => {
@@ -28,7 +21,27 @@ export default class App extends React.Component {
 		this.setState({
 			grid: computeNextIteration(grid)
 		})
+		this.onStop()
+		this.onStart()
     }
+
+    onStart = () => {
+		const timer = setInterval(() => {
+			this.setState({
+				grid: computeNextIteration(this.state.grid)
+			})
+		}, 150)
+
+		this.setState({timer})
+	}
+
+	onStop = () => {
+    	if (this.state.timer) {
+			clearInterval(this.state.timer)
+
+			this.setState({timer: null})
+		}
+	}
 
     renderGrid () {
         const {grid} = this.state
@@ -57,9 +70,19 @@ export default class App extends React.Component {
 
     render () {
 		return (
-            <div style={{border: '1px solid', position: 'relative', width: '400px', height: '400px'}}>
-                {this.renderGrid()}
-            </div>
+			<div className='scope__game-of-life'>
+				<div style={{width: '400px', display: 'flex', margin: '0px auto'}}>
+					<a href='javascript:' className='btn' style={{display: 'flex', margin: '0px auto 0px 20%'}} onClick={this.onStart}>
+						Start
+					</a>
+					<a href='javascript:' className='btn' style={{display: 'flex', margin: '0px 20% 0px auto'}} onClick={this.onStop}>
+						Stop
+					</a>
+				</div>
+				<div style={{border: '1px solid', position: 'relative', width: '402px', height: '402px', margin: '10px auto'}}>
+					{this.renderGrid()}
+				</div>
+			</div>
 		);
 	}
 }

@@ -1,7 +1,10 @@
 import React from 'react';
-import pureRender from 'pure-render-decorator';
 
-class Rectangle extends React.Component {
+export default class Rectangle extends React.Component {
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return this.props.isOn !== nextProps.isOn;
+	}
 
 	render() {
 		const {isOn, x, y, width, height, onClick, rowIndex, columnIndex} = this.props
@@ -14,5 +17,3 @@ class Rectangle extends React.Component {
 		);
 	}
 }
-
-export default pureRender(Rectangle)
